@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "browserify": "^8.0.2",
+    "cheerio": "^0.18.0",
     "handlebars": "^2.0.0",
     "q-io": "^1.11.6"
   },
@@ -17,6 +18,8 @@
     "del": "^1.1.1",
     "gulp": "^3.8.10",
     "gulp-compile-handlebars": "^0.4.4",
-    "gulp-rename": "^1.2.0"
+    "gulp-rename": "^1.2.0",
+    "trumpet": "^1.7.0",
+    "vinyl-transform": "^1.0.0"
   }
 }

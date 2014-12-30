@@ -7,18 +7,18 @@
 var fs = require('fs');
 var path = require('path');
 var handlebars = require('handlebars');
-
-// var site = require('./site');
+var cheerio = require('cheerio');
 
 /************
  *  Helper  *
  ************/
 
-module.exports = function(modulePath, options) {
-    var templatePath, content, template;
+module.exports = function (modulePath, options) {
+    var stylePath, templatePath, content, html, template, doc, first;
     var moduleName = modulePath.split(path.sep).pop();
     var hash = options.hash;
     var data = hash ? hash.data : null;
+    var files = fs.readdirSync(modulePath);
 
     // Remove data from options hash
     if (data) {
@@ -37,11 +37,26 @@ module.exports = function(modulePath, options) {
     }
 
     // Get path to template file
-    templatePath = path.join(modulePath, moduleName + '.hbs');
-
-    if (fs.existsSync(templatePath)) {
+    if (files.indexOf(moduleName + '.hbs') >= 0) {
+        templatePath = path.join(modulePath, moduleName + '.hbs');
         content = fs.readFileSync(templatePath);
         template = handlebars.compile(content.toString());
-        return new handlebars.SafeString(template(data));
+        html = template(data);
+        doc = cheerio.load(html);
+        first = doc('div');
+
+        // Add path to style
+        if (files.indexOf(moduleName + '.scss') >= 0) {
+            stylePath = encodeURIComponent(path.join(modulePath, moduleName + '.scss'));
+            first.attr('data-style', stylePath);
+        }
+
+        // Add path to module
+        if (files.indexOf('index.js') >= 0) {
+            modulePath = encodeURIComponent(modulePath);
+            first.attr('data-module', modulePath);
+        }
+
+        return new handlebars.SafeString(doc.html());
     }
 };

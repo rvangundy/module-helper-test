@@ -7,6 +7,8 @@
 var gulp = require('gulp');
 var rename = require('gulp-rename');
 var del = require('del');
+var transform = require('vinyl-transform');
+var trumpet = require('trumpet');
 var handlebars = require('gulp-compile-handlebars');
 var moduleHelper = require('./scripts/moduleLoaderHelper');
 
@@ -21,6 +23,11 @@ gulp.task('default', ['clean'], function() {
 
     gulp.src('./site/**/*.hbs')
         .pipe(handlebars({}, options))
+        .pipe(transform(function(filename) {
+        	var tr = trumpet();
+
+        	return tr.createStream();
+        })
         .pipe(rename({ extname: '.html' }))
         .pipe(gulp.dest('dist'));
 });
