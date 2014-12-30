@@ -1,0 +1,22 @@
+{
+  "name": "module-helper-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^8.0.2",
+    "handlebars": "^2.0.0",
+    "q-io": "^1.11.6"
+  },
+  "devDependencies": {
+    "del": "^1.1.1",
+    "gulp": "^3.8.10",
+    "gulp-compile-handlebars": "^0.4.4",
+    "gulp-rename": "^1.2.0"
+  }
+}
