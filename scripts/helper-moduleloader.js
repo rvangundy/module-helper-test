@@ -15,7 +15,7 @@ var cheerio = require('cheerio');
 
 module.exports = function(sites) {
     return function (modulePath, options) {
-        var stylePath, templatePath, content, html, template, doc, first, scripts, styles;
+        var stylePath, templatePath, content, html, template, doc, scripts, styles;
         var moduleName = modulePath.split(path.sep).pop();
         var hash = options.hash;
         var data = hash ? hash.data : null;
@@ -48,7 +48,6 @@ module.exports = function(sites) {
             template = handlebars.compile(content.toString());
             html = template(data);
             doc = cheerio.load(html);
-            first = doc('div');
 
             // Add path to style
             if (files.indexOf(moduleName + '.scss') >= 0) {
@@ -61,7 +60,7 @@ module.exports = function(sites) {
             if (files.indexOf('index.js') >= 0) {
                 scripts = site.scripts;
                 if (scripts.indexOf(modulePath) < 0) { scripts.push(modulePath); }
-                first.attr('data-module', modulePath);
+                doc(':root').attr('data-module', modulePath);
             }
 
             return new handlebars.SafeString(doc.html());

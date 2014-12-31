@@ -1,6 +1,6 @@
 'use strict';
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function runModules() {
     var module;
     var moduleName;
     var modules = window.document.querySelectorAll('[data-module]');

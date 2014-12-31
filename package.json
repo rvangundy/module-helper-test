@@ -8,20 +8,21 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "browserify": "^8.0.2",
     "cheerio": "^0.18.0",
-    "handlebars": "^2.0.0",
-    "q-io": "^1.11.6"
-  },
-  "devDependencies": {
+    "debowerify": "^1.2.0",
     "del": "^1.1.1",
     "gulp": "^3.8.10",
     "gulp-compile-handlebars": "^0.4.4",
+    "gulp-copy": "0.0.2",
     "gulp-data": "^1.1.1",
     "gulp-rename": "^1.2.0",
+    "handlebars": "^2.0.0",
+    "hbsfy": "^2.2.1",
+    "installify": "^0.1.1",
     "node-sass": "^2.0.0-beta",
-    "sass-css-stream": "^0.1.2",
+    "run-sequence": "^1.0.2",
     "trumpet": "^1.7.0",
     "uglify-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0"
