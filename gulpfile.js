@@ -16,6 +16,7 @@ var del = require('del');
 var runSequence = require('run-sequence');
 var transform = require('vinyl-transform');
 var data = require('gulp-data');
+var replace = require('gulp-replace');
 
 // HTML
 var hbsfy = require('hbsfy');
@@ -92,6 +93,17 @@ var addScripts = transform(function(file) {
  ************/
 
 /**
+ * Reports errors returned by the sass compiler
+ * @param {Error} error 
+ */
+function handleSassError(error) {
+    console.log(error.message);
+    console.log(error.code);
+    console.log(error.line);
+    console.log(error.column);
+}
+
+/**
  * Determines styles to load in to browserify bundle and adds them
  * to the <style> tag in the header of the streamed HTML file
  */
@@ -146,12 +158,7 @@ var addStyles = transform(function(file) {
             },
 
             // Error handling
-            error: function(error) {
-                console.log(error.message);
-                console.log(error.code);
-                console.log(error.line);
-                console.log(error.column);
-            }
+            error: handleSassError
         });
     }
 
@@ -176,8 +183,20 @@ var addStyles = transform(function(file) {
  *  Tasks  *
  ***********/
 
+gulp.task('default', ['clean', 'assets', 'build']);
+
 gulp.task('clean', function(cb) {
     del(['dist', '.tmp', '.cssmap'], cb);
+});
+
+gulp.task('assets', function() {
+
+    // Establishes assets url, using reasonable defaults for development and production
+    process.env.ASSETS_URL = process.env.ASSETS_URL ||
+        isDev ? 'file://' + path.join(__dirname, 'dist', 'assets') : '/assets';
+
+    gulp.src('./assets/**/*')
+        .pipe(gulp.dest('dist/assets'));
 });
 
 gulp.task('cssmaps', function() {
@@ -185,7 +204,7 @@ gulp.task('cssmaps', function() {
         .pipe(copy('./dist', { prefix: 1 }));
 });
 
-gulp.task('default', ['clean'], function() {
+gulp.task('build', function() {
     var options = { helpers: { module: moduleHelper(sites) } };
 
     return gulp.src('./site/**/*.hbs')
@@ -195,6 +214,7 @@ gulp.task('default', ['clean'], function() {
         .pipe(handlebars({}, options))
         .pipe(addScripts)
         .pipe(addStyles)
+        .pipe(replace('assets://', process.env.ASSETS_URL))
         .pipe(rename({ extname: '.html' }))
         .pipe(gulp.dest('dist'));
 });
